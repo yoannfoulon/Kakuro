@@ -1,16 +1,16 @@
 #include "Variable.hpp"
 
-Variable::Variable(std::string identifier, std::vector<int> domain, int value){
+Variable::Variable(int identifier, std::vector<int> domain, int value){
 	this->m_identifier = identifier;
 	this->m_domain = domain;
 	this->m_value = value;
 }
 
-std::string Variable::getIdentifier(){
+int Variable::getIdentifier(){
 	return this->m_identifier;
 }
 
-void Variable::setIdentifier(std::string identifier){
+void Variable::setIdentifier(int identifier){
 	this->m_identifier = identifier;
 }
 

@@ -5,13 +5,13 @@
 
 class Variable{
 	private:
-		std::string m_identifier;
+		int m_identifier;
 		std::vector<int> m_domain;
 		int m_value;
 	public:
-		Variable(std::string identifier, std::vector<int> domain, int value);
-		std::string getIdentifier();
-		void setIdentifier(std::string identifier);
+		Variable(int identifier, std::vector<int> domain, int value);
+		int getIdentifier();
+		void setIdentifier(int identifier);
 		std::vector<int> getDomain();
 		void setDomain(std::vector<int> domain);
 		void addToDomain(int value);
