@@ -182,13 +182,13 @@ void parse (char * nom_fichier, std::vector<Variable*> &globalVars, std::vector<
             j = i+1;
             while ((j < nb_colonnes) && (grille[num_ligne][j].coul == BLANCHE))
             {
-              Contrainte_Difference (grille[num_ligne][i].num,grille[num_ligne][j].num, globalContraintes, domain);
+              Contrainte_Difference (grille[num_ligne][i].num,grille[num_ligne][j].num, globalVars, globalContraintes);
               j++;
             }
             i++;
           }
 
-          Contrainte_Somme (portee,arite,grille[num_ligne][num_colonne].somme_horizontale, globalContraintes, domain);
+          Contrainte_Somme (portee,arite,grille[num_ligne][num_colonne].somme_horizontale, globalVars, globalContraintes);
         }
 
         if (grille[num_ligne][num_colonne].somme_verticale != -1)
@@ -203,13 +203,13 @@ void parse (char * nom_fichier, std::vector<Variable*> &globalVars, std::vector<
             j = i+1;
             while ((j < nb_lignes) && (grille[j][num_colonne].coul == BLANCHE))
             {
-              Contrainte_Difference (grille[i][num_colonne].num,grille[j][num_colonne].num, globalContraintes, domain);
+              Contrainte_Difference (grille[i][num_colonne].num,grille[j][num_colonne].num, globalVars, globalContraintes);
               j++;
             }
             i++;
           }
 
-          Contrainte_Somme (portee,arite,grille[num_ligne][num_colonne].somme_verticale, globalContraintes, domain);
+          Contrainte_Somme (portee,arite,grille[num_ligne][num_colonne].somme_verticale, globalVars, globalContraintes);
         }
       }
 
@@ -234,27 +234,26 @@ void Variable_Parser (int num, std::vector<Variable*> &globalVars, std::vector<i
 }
 
 
-void Contrainte_Difference (int var1, int var2, std::vector<Contrainte*> &globalContraintes, std::vector<int> domain)
+void Contrainte_Difference (int var1, int var2, std::vector<Variable*> &globalVars, std::vector<Contrainte*> &globalContraintes)
 /* fonction permettant la création d'une nouvelle contrainte binaire de différence entre les variables var1 et var2*/
 {
-    Variable* variable1 = new Variable(var1, domain, 0);
-    Variable* variable2 = new Variable(var2, domain, 0);
+    Variable* variable1 = globalVars[var1];
+    Variable* variable2 = globalVars[var2];
+
     std::vector<Variable*> variables = {variable1, variable2};
     ContrainteDifference* diff = new ContrainteDifference(variables, 2);
-
     globalContraintes.push_back(diff);
 }
 
 
-void Contrainte_Somme (int portee [], int arite, int val, std::vector<Contrainte*> &globalContraintes, std::vector<int> domain)
+void Contrainte_Somme (int portee [], int arite, int val, std::vector<Variable*> &globalVars, std::vector<Contrainte*> &globalContraintes)
 /* fonction permettant la création d'une nouvelle contrainte n-aire de somme portant sur les variables contenant dans le tableau portee de taille arite et dont la valeur est val */
 {
     std::vector<Variable*> variables;
     for(int i = 0; i < arite; ++i){
-        Variable* v = new Variable(portee[i], domain, 0);
+        Variable* v = globalVars[portee[i]];
         variables.push_back(v);
     }
     ContrainteSomme* sum = new ContrainteSomme(variables, arite, val);
-
     globalContraintes.push_back(sum);
 }

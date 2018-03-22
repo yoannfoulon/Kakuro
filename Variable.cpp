@@ -27,7 +27,7 @@ void Variable::addToDomain(int value){
 }
 
 void Variable::removeFromDomain(int value){
-	for(size_t i = 0; i < this->getDomain().size(); ++i){
+	for(unsigned i = 0; i < this->getDomain().size(); ++i){
 		if(this->getDomain()[i] == value){
 			this->getDomain().erase(this->getDomain().begin() + i);
 		}

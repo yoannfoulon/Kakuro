@@ -3,12 +3,18 @@ CC = g++
 LIBS = -lm
 CCFLAGS = -Wall -ggdb -std=c++11
 
-OBJ = Variable.o Contrainte.o ContrainteDifference.o ContrainteSomme.o parser.o
+OBJ = Variable.o Contrainte.o ContrainteDifference.o ContrainteSomme.o parser.o utils.o algorithm.o
 
 all: kakuroResolver
 
 kakuroResolver: main.cpp $(OBJ)
 	$(CC) $(CCFLAGS) -o kakuroResolver main.cpp  $(OBJ)
+
+algorithm.o: algorithm.cpp
+		$(CC) $(CCFLAGS) -c $^
+
+utils.o: utils.cpp
+		$(CC) $(CCFLAGS) -c $^
 
 parser.o: parser.cpp
 	$(CC) $(CCFLAGS) -c $^

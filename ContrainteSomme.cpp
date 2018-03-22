@@ -15,5 +15,5 @@ bool ContrainteSomme::evaluation(){
 }
 
 std::string ContrainteSomme::getType(){
-	return "ContrainteSomme : " + std::to_string(m_resultat);
+	return "ContrainteSomme";
 }
