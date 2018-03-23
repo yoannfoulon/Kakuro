@@ -11,3 +11,22 @@ bool ContrainteDifference::evaluation(){
 std::string ContrainteDifference::getType(){
 	return "ContrainteDifference";
 }
+
+void ContrainteDifference::remove(Variable *v){
+	bool isInVars = false;
+	for(unsigned i = 0; i < this->getVariables().size(); ++i){
+		if(this->getVariables()[i]->getIdentifier() == v->getIdentifier()){
+			isInVars = true;
+			break;
+		}
+	}
+	if(isInVars){
+		for(unsigned i = 0; i < this->getVariables().size(); ++i){
+			if(this->getVariables()[i]->getIdentifier() != v->getIdentifier()){
+				this->getVariables()[i]->removeFromDomain(v->getValue());
+			}
+		}
+	}
+}
+
+

@@ -8,4 +8,5 @@ class ContrainteDifference : public Contrainte{
 		ContrainteDifference(std::vector<Variable*> variables, int arite);
 		bool evaluation();
 		std::string getType();
+		void remove(Variable *v);
 };

@@ -41,3 +41,17 @@ bool isCompleted(std::vector<Variable*> solutions){
     }
     return true;
 }
+
+bool noEmptyDomain(std::vector<Variable*> vars){
+    for(unsigned i = 0; i < vars.size(); ++i){
+        if(vars[i]->getDomainSize() == 0)
+            return true;
+    }
+    return false;
+}
+
+void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes){
+    for(unsigned i = 0; i < globalContraintes.size(); ++i){
+        globalContraintes[i]->remove(v);
+    }
+}

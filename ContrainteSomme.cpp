@@ -17,3 +17,28 @@ bool ContrainteSomme::evaluation(){
 std::string ContrainteSomme::getType(){
 	return "ContrainteSomme";
 }
+
+int ContrainteSomme::getResultat(){
+	return this->m_resultat;
+}
+
+void ContrainteSomme::remove(Variable *v){
+	bool isInVars = false;
+	for(unsigned i = 0; i < this->getVariables().size(); ++i){
+		if(this->getVariables()[i]->getIdentifier() == v->getIdentifier()){
+			isInVars = true;
+			break;
+		}
+	}
+	if(isInVars){
+		for(unsigned i = 0; i < this->getVariables().size(); ++i){
+			if(this->getVariables()[i]->getIdentifier() != v->getIdentifier()){
+				for(int j = 0; j < this->getVariables()[j]->getDomainSize(); ++j){
+					if((this->getVariables()[i]->getDomain()[j] + v->getValue()) > this->getResultat()){
+						this->getVariables()[i]->removeFromDomain(this->getVariables()[i]->getDomain()[j]);
+					}
+				}
+			}
+		}
+	}
+}

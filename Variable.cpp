@@ -4,6 +4,7 @@ Variable::Variable(int identifier, std::vector<int> domain, int value){
 	this->m_identifier = identifier;
 	this->m_domain = domain;
 	this->m_value = value;
+	this->m_domainSize = this->m_domain.size();
 }
 
 int Variable::getIdentifier(){
@@ -29,7 +30,8 @@ void Variable::addToDomain(int value){
 void Variable::removeFromDomain(int value){
 	for(unsigned i = 0; i < this->getDomain().size(); ++i){
 		if(this->getDomain()[i] == value){
-			this->getDomain().erase(this->getDomain().begin() + i);
+			std::swap(this->getDomain()[i], this->getDomain()[this->getDomainSize() - 1]);
+			this->setDomainSize(this->getDomainSize() - 1);
 		}
 	}
 }
@@ -41,3 +43,20 @@ int Variable::getValue(){
 void Variable::setValue(int value){
 	this->m_value = value;
 }
+
+int Variable::getDomainSize(){
+	return this->m_domainSize;
+}
+
+void Variable::setDomainSize(int domainSize){
+	this->m_domainSize = domainSize;
+}
+
+int Variable::getRemovedSize(){
+	return this->m_removedSize;
+}
+
+void Variable::setRemovedSize(int removedSize){
+	this->m_removedSize = removedSize;
+}
+
