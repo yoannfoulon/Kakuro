@@ -56,3 +56,15 @@ std::vector<int> Variable::getRemovedSizes(){
 	return this->m_removedSizes;
 }
 
+int Variable::getNombreContraintes(){
+	return this->m_nombreContraintes;
+}
+
+void Variable::setNombreContraintes(int nombreContraintes){
+	this->m_nombreContraintes = nombreContraintes;
+}
+
+float Variable::getHeuristic(){
+	return (float) this->m_domainSize / (float) this->m_nombreContraintes;
+}
+

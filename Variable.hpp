@@ -10,6 +10,7 @@ class Variable{
 		int m_value;
 		int m_domainSize;
 		std::vector<int> m_removedSizes;
+		int m_nombreContraintes;
 	public:
 		Variable(int identifier, std::vector<int> domain, int value);
 		int getIdentifier();
@@ -23,4 +24,7 @@ class Variable{
 		int getDomainSize();
 		void setDomainSize(int domainSize);
 		std::vector<int> getRemovedSizes();
+		int getNombreContraintes();
+		void setNombreContraintes(int nombreContraintes);
+		float getHeuristic();
 };

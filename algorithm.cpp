@@ -8,6 +8,20 @@ std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<
     int nbNoeuds = 1;
 
     int k = 0;
+
+    /*
+    std::sort(globalVars.begin(), globalVars.end(), customLess);
+
+    for(unsigned i = 0; i < globalVars.size(); ++i){
+        std::cout << globalVars[i]->getHeuristic();
+        if(i != globalVars.size()-2){
+            std::cout << "."
+        } else {
+            std::cout << ", ";
+        }
+    }
+    std::cout << std::endl;
+    */
     process.push(globalVars[k]);
 
     while(!process.empty()){

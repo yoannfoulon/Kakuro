@@ -1,6 +1,12 @@
 #include "utils.hpp"
 #include <iostream>
 
+struct {
+    bool operator()(Variable* a, Variable* b) const {
+        return a->getHeuristic() < b->getHeuristic();
+    }
+} customLess;
+
 void displayCSP(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes){
     std::cout << "----------------- VARIABLES -------------------" << std::endl;
 
