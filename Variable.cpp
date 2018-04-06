@@ -52,11 +52,7 @@ void Variable::setDomainSize(int domainSize){
 	this->m_domainSize = domainSize;
 }
 
-int Variable::getRemovedSize(){
-	return this->m_removedSize;
-}
-
-void Variable::setRemovedSize(int removedSize){
-	this->m_removedSize = removedSize;
+std::vector<int> Variable::getRemovedSizes(){
+	return this->m_removedSizes;
 }
 

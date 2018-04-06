@@ -9,7 +9,7 @@ class Variable{
 		std::vector<int> m_domain;
 		int m_value;
 		int m_domainSize;
-		int m_removedSize;
+		std::vector<int> m_removedSizes;
 	public:
 		Variable(int identifier, std::vector<int> domain, int value);
 		int getIdentifier();
@@ -22,6 +22,5 @@ class Variable{
 		void setValue(int value);
 		int getDomainSize();
 		void setDomainSize(int domainSize);
-		int getRemovedSize();
-		void setRemovedSize(int removedSize);
+		std::vector<int> getRemovedSizes();
 };

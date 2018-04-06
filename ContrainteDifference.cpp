@@ -24,6 +24,7 @@ void ContrainteDifference::remove(Variable *v){
 		for(unsigned i = 0; i < this->getVariables().size(); ++i){
 			if(this->getVariables()[i]->getIdentifier() != v->getIdentifier()){
 				this->getVariables()[i]->removeFromDomain(v->getValue());
+				this->getVariables()[i]->getRemovedSizes().push_back(1);
 			}
 		}
 	}
