@@ -1,6 +1,6 @@
 #include "Variable.hpp"
 
-Variable::Variable(int identifier, std::vector<int> domain, int value){
+Variable::Variable(int identifier, std::vector<int> &domain, int value){
 	this->m_identifier = identifier;
 	this->m_domain = domain;
 	this->m_value = value;

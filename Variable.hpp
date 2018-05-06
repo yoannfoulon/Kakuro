@@ -12,7 +12,7 @@ class Variable{
 		std::vector<int> m_removedSizes;
 		int m_nombreContraintes;
 	public:
-		Variable(int identifier, std::vector<int> domain, int value);
+		Variable(int identifier, std::vector<int> &domain, int value);
 		int getIdentifier();
 		void setIdentifier(int identifier);
 		std::vector<int> getDomain();

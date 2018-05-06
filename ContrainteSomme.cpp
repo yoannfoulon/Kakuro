@@ -22,26 +22,11 @@ int ContrainteSomme::getResultat(){
 	return this->m_resultat;
 }
 
-void ContrainteSomme::remove(Variable *v){
-	bool isInVars = false;
-	for(unsigned i = 0; i < this->getVariables().size(); ++i){
-		if(this->getVariables()[i]->getIdentifier() == v->getIdentifier()){
-			isInVars = true;
-			break;
-		}
-	}
-	if(isInVars){
-		for(unsigned i = 0; i < this->getVariables().size(); ++i){
-			if(this->getVariables()[i]->getIdentifier() != v->getIdentifier()){
-				int removedSize;
-				for(int j = 0; j < this->getVariables()[j]->getDomainSize(); ++j){
-					if((this->getVariables()[i]->getDomain()[j] + v->getValue()) > this->getResultat()){
-						this->getVariables()[i]->removeFromDomain(this->getVariables()[i]->getDomain()[j]);
-						++removedSize;
-					}
-				}
-				this->getVariables()[i]->getRemovedSizes().push_back(removedSize);
-			}
+void ContrainteSomme::remove(Variable *currentVar, Variable *v2, int *removedSize){
+	for(unsigned i = 0; i < v2->getDomainSize(); ++i){
+		if((v2->getDomain()[i] + currentVar->getValue()) > this->getResultat()){
+			v2->removeFromDomain(v2->getDomain()[i]);
+			++removedSize;
 		}
 	}
 }

@@ -17,5 +17,6 @@ class Contrainte{
 		int getArite();
 		void setArite(int arite);
 		virtual std::string getType() = 0;
-		virtual void remove(Variable *v) = 0;
+		virtual void remove(Variable *currentVar, Variable *v2, int *removedSize) = 0;
+		bool isInVars(Variable *v);
 };

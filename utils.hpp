@@ -10,6 +10,7 @@
 void displayCSP(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes);
 bool isConsistant(std::vector<Contrainte*> globalContraintes);
 bool isCompleted(std::vector<Variable*> solutions);
-void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes);
+void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std::vector<Variable*> globalVariables, std::vector<Variable*> variablesModifs, int *nbModif);
+bool emptyDomain(std::vector<Variable*> vars);
 
 #endif

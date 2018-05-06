@@ -48,7 +48,7 @@ bool isCompleted(std::vector<Variable*> solutions){
     return true;
 }
 
-bool noEmptyDomain(std::vector<Variable*> vars){
+bool emptyDomain(std::vector<Variable*> vars){
     for(unsigned i = 0; i < vars.size(); ++i){
         if(vars[i]->getDomainSize() == 0)
             return true;
@@ -56,8 +56,23 @@ bool noEmptyDomain(std::vector<Variable*> vars){
     return false;
 }
 
-void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes){
-    for(unsigned i = 0; i < globalContraintes.size(); ++i){
-        globalContraintes[i]->remove(v);
+void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std::vector<Variable*> globalVariables, std::vector<Variable*> variablesModifs, int *nbModif){
+    for(int i = 0; i < globalVariables.size(); ++i){
+        if(v->getIdentifier() != globalVariables[i]->getIdentifier()){
+            int removedSize = 0;
+            for(int j = 0; j < globalContraintes.size(); ++j){
+                bool isInVars1 = globalContraintes[j]->isInVars(v);
+                bool isInVars2 = globalContraintes[j]->isInVars(globalVariables[i]);
+                if(isInVars1 && isInVars2){
+                    globalContraintes[j]->remove(v, globalVariables[i], &removedSize);
+                }
+            }
+        
+            if(removedSize != 0){
+                globalVariables[i]->getRemovedSizes().push_back(removedSize);
+                variablesModifs.push_back(globalVariables[i]);
+                ++nbModif ;
+            }
+        }    
     }
 }

@@ -11,5 +11,5 @@ class ContrainteSomme : public Contrainte{
 		int getResultat();
 		void setResultat(int value);
 		std::string getType();
-		void remove(Variable *v);
+		void remove(Variable *currentVar, Variable *v2, int *removedSize);
 };
