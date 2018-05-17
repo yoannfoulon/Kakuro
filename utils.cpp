@@ -51,7 +51,6 @@ bool isCompleted(std::vector<Variable*> solutions){
 }
 
 bool emptyDomain(std::vector<Variable*> vars){
-
     for(unsigned i = 0; i < vars.size(); ++i){
         if(vars[i]->getDomainSize() == 0) return true;
     }
@@ -71,17 +70,7 @@ void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std
             }
 
             if(removedSize != 0){
-                printf("RemovedSize : %d\n", removedSize);
-                
-                std::vector<int> removedSizes = globalVariables[i]->getRemovedSizes();
-                removedSizes.push_back(removedSize);
-                globalVariables[i]->setRemovedSizes(removedSizes);
-
-                for(int k = 0; k < globalVariables[i]->getRemovedSizes().size(); ++k){
-                    printf("%d ", globalVariables[i]->getRemovedSizes()[k]);
-                }
-                printf("\n");
-
+                globalVariables[i]->getRemovedSizes().push_back(removedSize);
                 variablesModifs->push_back(globalVariables[i]);
                 ++*nbModif;
             }

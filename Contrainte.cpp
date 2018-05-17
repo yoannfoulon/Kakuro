@@ -5,7 +5,7 @@ Contrainte::Contrainte(std::vector<Variable*> variables, int arite){
 	this->m_arite = arite;
 }
 
-std::vector<Variable*> Contrainte::getVariables(){
+std::vector<Variable*>& Contrainte::getVariables(){
 	return this->m_variables;
 }
 

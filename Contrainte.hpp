@@ -11,7 +11,7 @@ class Contrainte{
 	public:
 		Contrainte(std::vector<Variable*>, int arite);
 		virtual bool evaluation() = 0;
-		std::vector<Variable*> getVariables();
+		std::vector<Variable*>& getVariables();
 		void setVariables(std::vector<Variable*> variables);
 		void addVariable(Variable* variable);
 		int getArite();

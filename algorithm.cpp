@@ -10,6 +10,8 @@ std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<
     int k = 0;
 
     /*
+        Implémentation heurisitiques
+
     std::sort(globalVars.begin(), globalVars.end(), customLess);
 
     for(unsigned i = 0; i < globalVars.size(); ++i){
@@ -22,6 +24,7 @@ std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<
     }
     std::cout << std::endl;
     */
+
     process.push(globalVars[k]);
 
     while(!process.empty()){
@@ -68,36 +71,28 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
     process.push(globalVars[k]);
 
     while(!process.empty()){
+
         Variable* currentVar = process.top();
-        std::cout << "Variable étudiée : " << currentVar->getIdentifier() << " -> " << currentVar->getValue() << std::endl;
+        //std::cout << "Variable étudiée : " << currentVar->getIdentifier() << " -> " << currentVar->getValue() << std::endl;
 
         for(int i = 0; i < currentVar->getDomainSize(); ++i){
-            std::cout << "Domaine en cours : " << currentVar->getDomain()[i] << std::endl;
+            //std::cout << "Domaine en cours : " << currentVar->getDomain()[i] << std::endl;
             int nbModif = 0;
             currentVar->setValue(currentVar->getDomain()[i]);
             checkAndRemove(currentVar, globalContraintes, globalVars, &variablesModif, &nbModif);
             nbVarModif.push(nbModif);
-            /*
-            printf("Variables modifiées (algorithm) : ");
-            for(int k = 0; k < variablesModif.size(); ++k){
-                printf("%d ", variablesModif[k]->getIdentifier());
-            }
-            printf("\n");
-            */
-            for(unsigned i = 0; i < globalVars.size(); ++i){
-                printf("Taille domaine de %d : %d => ", globalVars[i]->getIdentifier(), globalVars[i]->getDomainSize());
-                for(int j = 0; j < globalVars[i]->getDomainSize(); ++j){
-                    printf("%d ", globalVars[i]->getDomain()[j]);
-                }
-                printf("\n");
-            }
 
+            for(int j = 0; j < globalVars.size(); ++j){
+                std::cout << "Domaine de " << globalVars[j]->getIdentifier() << " (" << globalVars[j]->getDomainSize() << ") => ";
+                for(int k = 0; k < globalVars[j]->getDomainSize(); ++k){
+                    std::cout << globalVars[j]->getDomain()[k] << " ";
+                }
+                std::cout << std::endl;
+            }
 
             if(!emptyDomain(globalVars)){
-                printf("VALEUR TROUVEE POUR %d = %d", currentVar->getIdentifier(), currentVar->getValue());
-                if(isCompleted(globalVars)){
-                    return globalVars;
-                }
+                printf("\nValeur trouvée pour la variable %d => %d\n\n", currentVar->getIdentifier(), currentVar->getValue());
+                if(isCompleted(globalVars)) return globalVars;
                 process.push(globalVars[++k]);
                 ++nbNoeuds;
                 break;
@@ -111,7 +106,6 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                         variablesModif[i]->getRemovedSizes()[variablesModif[i]->getRemovedSizes().size() - 1]
                     );
                     variablesModif[i]->getRemovedSizes().pop_back();
-
                     variablesModif.pop_back();
                 }
             }

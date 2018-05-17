@@ -16,7 +16,7 @@ class Variable{
 		Variable(int identifier, std::vector<int> &domain, int value);
 		int getIdentifier();
 		void setIdentifier(int identifier);
-		std::vector<int> getDomain();
+		std::vector<int>& getDomain();
 		void setDomain(std::vector<int> domain);
 		void addToDomain(int value);
 		void removeFromDomain(int value);
@@ -24,7 +24,7 @@ class Variable{
 		void setValue(int value);
 		int getDomainSize();
 		void setDomainSize(int domainSize);
-		std::vector<int> getRemovedSizes();
+		std::vector<int>& getRemovedSizes();
 		void setRemovedSizes(std::vector<int> removedSizes);
 		int getNombreContraintes();
 		void setNombreContraintes(int nombreContraintes);

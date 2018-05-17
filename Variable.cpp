@@ -15,7 +15,7 @@ void Variable::setIdentifier(int identifier){
 	this->m_identifier = identifier;
 }
 
-std::vector<int> Variable::getDomain(){
+std::vector<int>& Variable::getDomain(){
 	return this->m_domain;
 }
 
@@ -34,20 +34,8 @@ void Variable::setRemovedSizes(std::vector<int> removedSizes){
 void Variable::removeFromDomain(int value){
 	for(unsigned i = 0; i < this->getDomain().size(); ++i){
 		if(this->getDomain()[i] == value){
-			std::vector<int> newDomain = this->getDomain();
-			int temp = this->getDomain()[i];
-			newDomain[i] = newDomain[this->getDomainSize()-1];
-			newDomain[this->getDomainSize()-1] = temp;
-
-			this->setDomain(newDomain);
+			std::swap(this->getDomain()[i], this->getDomain()[this->getDomainSize()-1]);
 			this->setDomainSize(this->getDomainSize()-1);
-			/*
-			printf("Variable %d : ", this->getIdentifier());
-			for(unsigned i = 0; i < this->getDomainSize(); ++i){
-				printf("%d ", newDomain[i]);
-			}
-			printf("\n");
-			*/
 			break;
 		}
 	}
@@ -69,7 +57,7 @@ void Variable::setDomainSize(int domainSize){
 	this->m_domainSize = domainSize;
 }
 
-std::vector<int> Variable::getRemovedSizes(){
+std::vector<int>& Variable::getRemovedSizes(){
 	return this->m_removedSizes;
 }
 
