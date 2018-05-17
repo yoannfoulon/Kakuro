@@ -27,7 +27,7 @@ void Contrainte::setArite(int arite){
 
 bool Contrainte::isInVars(Variable *v){
 	bool isInVars = false;
-	for(int i = 0; i < this->getVariables().size(); ++i){
+	for(unsigned i = 0; i < this->getVariables().size(); ++i){
 		if(v->getIdentifier() == this->getVariables()[i]->getIdentifier()){
 			isInVars = true;
 			break;

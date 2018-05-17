@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 class Variable{
 	private:
@@ -24,6 +25,7 @@ class Variable{
 		int getDomainSize();
 		void setDomainSize(int domainSize);
 		std::vector<int> getRemovedSizes();
+		void setRemovedSizes(std::vector<int> removedSizes);
 		int getNombreContraintes();
 		void setNombreContraintes(int nombreContraintes);
 		float getHeuristic();

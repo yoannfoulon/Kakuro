@@ -27,11 +27,28 @@ void Variable::addToDomain(int value){
 	this->getDomain().push_back(value);
 }
 
+void Variable::setRemovedSizes(std::vector<int> removedSizes){
+	this->m_removedSizes = removedSizes;
+}
+
 void Variable::removeFromDomain(int value){
 	for(unsigned i = 0; i < this->getDomain().size(); ++i){
 		if(this->getDomain()[i] == value){
-			std::swap(this->getDomain()[i], this->getDomain()[this->getDomainSize() - 1]);
-			this->setDomainSize(this->getDomainSize() - 1);
+			std::vector<int> newDomain = this->getDomain();
+			int temp = this->getDomain()[i];
+			newDomain[i] = newDomain[this->getDomainSize()-1];
+			newDomain[this->getDomainSize()-1] = temp;
+
+			this->setDomain(newDomain);
+			this->setDomainSize(this->getDomainSize()-1);
+			/*
+			printf("Variable %d : ", this->getIdentifier());
+			for(unsigned i = 0; i < this->getDomainSize(); ++i){
+				printf("%d ", newDomain[i]);
+			}
+			printf("\n");
+			*/
+			break;
 		}
 	}
 }
@@ -67,4 +84,3 @@ void Variable::setNombreContraintes(int nombreContraintes){
 float Variable::getHeuristic(){
 	return (float) this->m_domainSize / (float) this->m_nombreContraintes;
 }
-

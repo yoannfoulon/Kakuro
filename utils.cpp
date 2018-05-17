@@ -1,11 +1,13 @@
 #include "utils.hpp"
 #include <iostream>
 
+/*
 struct {
     bool operator()(Variable* a, Variable* b) const {
         return a->getHeuristic() < b->getHeuristic();
     }
 } customLess;
+*/
 
 void displayCSP(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes){
     std::cout << "----------------- VARIABLES -------------------" << std::endl;
@@ -49,30 +51,40 @@ bool isCompleted(std::vector<Variable*> solutions){
 }
 
 bool emptyDomain(std::vector<Variable*> vars){
+
     for(unsigned i = 0; i < vars.size(); ++i){
-        if(vars[i]->getDomainSize() == 0)
-            return true;
+        if(vars[i]->getDomainSize() == 0) return true;
     }
     return false;
 }
 
-void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std::vector<Variable*> globalVariables, std::vector<Variable*> variablesModifs, int *nbModif){
-    for(int i = 0; i < globalVariables.size(); ++i){
+void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std::vector<Variable*> globalVariables, std::vector<Variable*> *variablesModifs, int *nbModif){
+    for(unsigned i = 0; i < globalVariables.size(); ++i){
         if(v->getIdentifier() != globalVariables[i]->getIdentifier()){
             int removedSize = 0;
-            for(int j = 0; j < globalContraintes.size(); ++j){
+            for(unsigned j = 0; j < globalContraintes.size(); ++j){
                 bool isInVars1 = globalContraintes[j]->isInVars(v);
                 bool isInVars2 = globalContraintes[j]->isInVars(globalVariables[i]);
                 if(isInVars1 && isInVars2){
                     globalContraintes[j]->remove(v, globalVariables[i], &removedSize);
                 }
             }
-        
+
             if(removedSize != 0){
-                globalVariables[i]->getRemovedSizes().push_back(removedSize);
-                variablesModifs.push_back(globalVariables[i]);
-                ++nbModif ;
+                printf("RemovedSize : %d\n", removedSize);
+                
+                std::vector<int> removedSizes = globalVariables[i]->getRemovedSizes();
+                removedSizes.push_back(removedSize);
+                globalVariables[i]->setRemovedSizes(removedSizes);
+
+                for(int k = 0; k < globalVariables[i]->getRemovedSizes().size(); ++k){
+                    printf("%d ", globalVariables[i]->getRemovedSizes()[k]);
+                }
+                printf("\n");
+
+                variablesModifs->push_back(globalVariables[i]);
+                ++*nbModif;
             }
-        }    
+        }
     }
 }
