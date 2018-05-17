@@ -73,16 +73,15 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
     while(!process.empty()){
 
         Variable* currentVar = process.top();
-        //std::cout << "Variable étudiée : " << currentVar->getIdentifier() << " -> " << currentVar->getValue() << std::endl;
 
         for(int i = 0; i < currentVar->getDomainSize(); ++i){
-            //std::cout << "Domaine en cours : " << currentVar->getDomain()[i] << std::endl;
             int nbModif = 0;
+
             currentVar->setValue(currentVar->getDomain()[i]);
             checkAndRemove(currentVar, globalContraintes, globalVars, &variablesModif, &nbModif);
             nbVarModif.push(nbModif);
 
-            for(int j = 0; j < globalVars.size(); ++j){
+            for(unsigned j = 0; j < globalVars.size(); ++j){
                 std::cout << "Domaine de " << globalVars[j]->getIdentifier() << " (" << globalVars[j]->getDomainSize() << ") => ";
                 for(int k = 0; k < globalVars[j]->getDomainSize(); ++k){
                     std::cout << globalVars[j]->getDomain()[k] << " ";
@@ -95,6 +94,7 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                 if(isCompleted(globalVars)) return globalVars;
                 process.push(globalVars[++k]);
                 ++nbNoeuds;
+                //TODO: Regarder pourquoi ce break change le résultat
                 break;
             } else {
                 int nbVarModifAtStep = nbVarModif.top();
@@ -108,6 +108,7 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                     variablesModif[i]->getRemovedSizes().pop_back();
                     variablesModif.pop_back();
                 }
+                exit(0);
             }
         }
 
