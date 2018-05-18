@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include "Contrainte.hpp"
 
 class ContrainteDifference : public Contrainte{
