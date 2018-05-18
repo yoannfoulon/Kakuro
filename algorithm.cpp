@@ -64,8 +64,30 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
     process.push(globalVars[k]);
 
     while(!process.empty()){
-        std::cout << "Coucou je suis repati dans une folle folle de boucle ou l'amusement est sans pareil. Abraham Lincoln" << std::endl;
         Variable* currentVar = process.top();
+        
+        bool domainCheck = false; 
+        if(emptyDomain(globalVars) || (currentVar->getDomainSize() == 1 && currentVar->getValue() == currentVar->getDomain()[0])){
+            process.pop();
+            globalVars[k]->setDomainSize(globalVars[k]->getDomainSize() + 1);
+            int nbVarModifAtStep = nbVarModif.top();
+            nbVarModif.pop();
+            unsigned oldSize = variablesModif.size();
+            for(int j = (oldSize - 1); j >= (oldSize - nbVarModifAtStep); j--){
+                variablesModif[j]->setDomainSize(
+                    variablesModif[j]->getDomainSize() +
+                    variablesModif[j]->getRemovedSizes()[variablesModif[j]->getRemovedSizes().size() - 1]
+                );
+                variablesModif[j]->getRemovedSizes().pop_back();
+                variablesModif.pop_back();
+            }
+            --k;
+            currentVar->setValue(0);
+            domainCheck = true;
+        }
+        if(domainCheck) continue;
+
+        std::cout << currentVar->getValue() << std::endl;
         int begin = 0;
         if(currentVar->getValue() > 0){
             for (int i = 0; i < currentVar->getDomainSize(); i++)
@@ -97,24 +119,23 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                 //TODO: Regarder pourquoi ce break change le résultat
                 break;
             }
+
             else if(emptyDomain(globalVars) && i == currentVar->getDomainSize() - 1){
                 std::cout << "Aucune valeur consistante trouvée pour la variable " << currentVar->getIdentifier() << std::endl;
                 process.pop();
                 int nbVarModifAtStep = nbVarModif.top();
+                std::cout << variablesModif[variablesModif.size() - 1]->getRemovedSizes()[ variablesModif[variablesModif.size() - 1]->getRemovedSizes().size() - 1] << std::endl;
                 nbVarModif.pop();
                 unsigned oldSize = variablesModif.size();
-                for(int j = (oldSize - 1); i >= (oldSize - nbVarModifAtStep); j--){
+                for(int j = (oldSize - 1); j >= (oldSize - nbVarModifAtStep); j--){
                     variablesModif[j]->setDomainSize(
                         variablesModif[j]->getDomainSize() +
                         variablesModif[j]->getRemovedSizes()[variablesModif[j]->getRemovedSizes().size() - 1]
                     );
+                    variablesModif[j]->getRemovedSizes().pop_back();
                     variablesModif.pop_back();
                 }
-                std::cout << "COucou" << std::endl;
                 --k;
-                std::cout << "COucou" << std::endl;
-                std::cout << k << std::endl;
-                std::cout << currentVar->getDomainSize() << std::endl;
                 currentVar->setValue(0);
             }
             else {
