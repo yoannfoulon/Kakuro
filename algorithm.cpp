@@ -5,26 +5,26 @@
 /*
     Implémentation heurisitiques
 
-std::sort(globalVars.begin(), globalVars.end(), customLess);
+    std::sort(globalVars.begin(), globalVars.end(), customLess);
 
-for(unsigned i = 0; i < globalVars.size(); ++i){
-    std::cout << globalVars[i]->getHeuristic();
-    if(i != globalVars.size()-2){
-        std::cout << "."
-    } else {
-        std::cout << ", ";
+    for(unsigned i = 0; i < globalVars.size(); ++i){
+        std::cout << globalVars[i]->getHeuristic();
+        if(i != globalVars.size()-2){
+            std::cout << "."
+        } else {
+            std::cout << ", ";
+        }
     }
-}
-std::cout << std::endl;
+    std::cout << std::endl;
 */
 
-std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes){
+std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes, int *nbNoeuds, int *nbTests){
 
     std::stack<Variable*> process;
 
-    int nbNoeuds = 1;
     int k = 0;
     Variable* currentVar;
+    ++*nbNoeuds;
 
     process.push(globalVars[k]);
 
@@ -36,12 +36,12 @@ std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<
         for(int i = currentVar->getValue(); i < currentVar->getDomain().size() && !consistant; ++i){
 
             currentVar->setValue(currentVar->getDomain()[i]);
-            consistant = isConsistant(globalContraintes);
+            consistant = isConsistant(globalContraintes, nbTests);
 
             if(consistant){
                 if(isCompleted(globalVars)) return globalVars;
                 process.push(globalVars[++k]);
-                ++nbNoeuds;
+                ++*nbNoeuds;
             }
         }
         if(!consistant){
@@ -53,7 +53,7 @@ std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<
     return globalVars;
 }
 
-std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes){
+std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes, int *nbTests){
 
     std::stack<Variable*> process;
     std::stack<int> nbVarModif;
@@ -65,8 +65,8 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
 
     while(!process.empty()){
         Variable* currentVar = process.top();
-        
-        bool domainCheck = false; 
+
+        bool domainCheck = false;
         if(emptyDomain(globalVars) || (currentVar->getDomainSize() == 1 && currentVar->getValue() == currentVar->getDomain()[0])){
             process.pop();
             globalVars[k]->setDomainSize(globalVars[k]->getDomainSize() + 1);
@@ -147,10 +147,8 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                 }
                 std::cout << "EMPTY DOMAIN" << std::endl;
                 int nbVarModifAtStep = nbVarModif.top();
-                std::cout << nbVarModifAtStep << std::endl;
                 nbVarModif.pop();
                 unsigned oldSize = variablesModif.size();
-                //std::cout << oldSize << std::endl;
                 for(int j = (oldSize - 1); j >= (oldSize - nbVarModifAtStep); j--){
                     variablesModif[j]->setDomainSize(
                         variablesModif[j]->getDomainSize() +

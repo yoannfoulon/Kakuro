@@ -29,6 +29,8 @@ int main (int argc, char *argv[]) {
     std::vector<Variable*> globalVars;
     std::vector<Contrainte*> globalContraintes;
     std::vector<int> domain = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int nbNoeuds = 0;
+    int nbTests = 0;
     std::clock_t start;
     double duration;
 
@@ -40,10 +42,13 @@ int main (int argc, char *argv[]) {
     if(BT){
         std::cout << "--------- BACKTRACK ---------" << std::endl;
         start = std::clock();
-        solutions = backTrack(globalVars, globalContraintes);
+        solutions = backTrack(globalVars, globalContraintes, &nbNoeuds, &nbTests);
         duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
         std::cout << "Réalisé en " << duration << " secondes" << std::endl;
+        std::cout << nbNoeuds << " noeuds" << std::endl;
+        std::cout << nbTests << " tests de contrainte" << std::endl;
+
         for(unsigned i = 0; i < solutions.size(); ++i){
             std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
         }
@@ -52,7 +57,7 @@ int main (int argc, char *argv[]) {
     if(FC){
         std::cout << "--------- FORWARD CHECKING ---------" << std::endl;
         start = std::clock();
-        solutions = forwardChecking(globalVars, globalContraintes);
+        solutions = forwardChecking(globalVars, globalContraintes, &nbTests);
         duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
         std::cout << "Réalisé en " << duration << " secondes" << std::endl;

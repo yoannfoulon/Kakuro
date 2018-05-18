@@ -27,8 +27,9 @@ void displayCSP(std::vector<Variable*> globalVars, std::vector<Contrainte*> glob
     }
 }
 
-bool isConsistant(std::vector<Contrainte*> globalContraintes){
+bool isConsistant(std::vector<Contrainte*> globalContraintes, int *nbTests){
     for(int i = 0; i < globalContraintes.size(); ++i){
+        ++*nbTests;
         bool verifiable = true;
         for (int j = 0; j < globalContraintes[i]->getArite() && verifiable; ++j) {
             if (globalContraintes[i]->getVariables()[j]->getValue() == 0) verifiable = false;
@@ -76,7 +77,7 @@ void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std
                     globalContraintes[j]->remove(v, globalVariables[begin], &removedSize);
                 }
             }
-            
+
 
             if(removedSize != 0){
                 globalVariables[begin]->getRemovedSizes().push_back(removedSize);
