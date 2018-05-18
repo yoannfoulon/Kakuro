@@ -24,13 +24,10 @@ int ContrainteSomme::getResultat(){
 
 void ContrainteSomme::remove(Variable *currentVar, Variable *v2, int *removedSize){
 	for(int i = 0; i < v2->getDomainSize(); ++i){
-		printf("%d + %d = %d ", v2->getDomain()[i], currentVar->getValue(), this->getResultat());
 		if((v2->getDomain()[i] + currentVar->getValue()) > this->getResultat()){
-			printf("Removed from %d domain", v2->getIdentifier());
 			v2->removeFromDomain(v2->getDomain()[i]);
 			--i;
 			++*removedSize;
 		}
-		printf("\n");
 	}
 }

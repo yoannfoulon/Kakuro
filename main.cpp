@@ -3,16 +3,28 @@
 #include "utils.hpp"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <iostream>
 #include <ctime>
 
 
 int main (int argc, char *argv[]) {
 
-    if (argc - 1 != 1) {
-        fprintf (stderr,"Utilisation: %s <fichier>\n",argv[0]);
+    bool BT, FC, FCH;
+
+    if (argc < 2) {
+        fprintf (stderr,"Utilisation: %s [-bt] [-fc] [-fch] <fichier>\n", argv[0]);
         exit (-1);
     }
+
+    for (int i = 0; i < argc; i++) {
+		if (strcmp(argv[i], "-bt") == 0)
+			BT = true;
+		if (strcmp(argv[i], "-fc") == 0)
+			FC = true;
+		if (strcmp(argv[i], "-fch") == 0)
+			FCH = true;
+	}
 
     std::vector<Variable*> globalVars;
     std::vector<Contrainte*> globalContraintes;
@@ -22,33 +34,31 @@ int main (int argc, char *argv[]) {
 
     std::vector<Variable*> solutions;
 
-    parse(argv[1], globalVars, globalContraintes, domain);
+    parse(argv[argc-1], globalVars, globalContraintes, domain);
     displayCSP(globalVars, globalContraintes);
 
-    std::cout << "--------- BACKTRACK ---------" << std::endl;
-    start = std::clock();
-    solutions = backTrack(globalVars, globalContraintes);
-    duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    if(BT){
+        std::cout << "--------- BACKTRACK ---------" << std::endl;
+        start = std::clock();
+        solutions = backTrack(globalVars, globalContraintes);
+        duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
-    std::cout << "Réalisé en " << duration << " secondes" << std::endl;
-    for(unsigned i = 0; i < solutions.size(); ++i){
-        std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
+        std::cout << "Réalisé en " << duration << " secondes" << std::endl;
+        for(unsigned i = 0; i < solutions.size(); ++i){
+            std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
+        }
     }
 
-    // Reset
-    for(unsigned i = 0; i < globalVars.size(); ++i){
-        globalVars[i]->setValue(0);
+    if(FC){
+        std::cout << "--------- FORWARD CHECKING ---------" << std::endl;
+        start = std::clock();
+        solutions = forwardChecking(globalVars, globalContraintes);
+        duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
+        std::cout << "Réalisé en " << duration << " secondes" << std::endl;
+        for(unsigned i = 0; i < solutions.size(); ++i){
+          std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
+        }
     }
-
-    std::cout << "--------- FORWARD CHECKING ---------" << std::endl;
-    start = std::clock();
-    solutions = forwardChecking(globalVars, globalContraintes);
-    duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
-    std::cout << "Réalisé en " << duration << " secondes" << std::endl;
-    for(unsigned i = 0; i < solutions.size(); ++i){
-      std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
-    }
-
     return 0;
 }
