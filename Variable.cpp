@@ -35,7 +35,7 @@ void Variable::removeFromDomain(int value){
 	for(unsigned i = 0; i < this->getDomain().size(); ++i){
 		if(this->getDomain()[i] == value){
 			std::swap(this->getDomain()[i], this->getDomain()[this->getDomainSize()-1]);
-			this->setDomainSize(this->getDomainSize()-1);
+			this->setDomainSize(this->getDomainSize() - 1);
 			break;
 		}
 	}
