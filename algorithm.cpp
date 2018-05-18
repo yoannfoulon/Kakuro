@@ -77,6 +77,7 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
             int nbModif = 0;
 
             currentVar->setValue(currentVar->getDomain()[i]);
+            std::cout << "Valeur testée: " << currentVar->getValue ()  << " pour la variable " << currentVar->getIdentifier () << std::endl;
             checkAndRemove(currentVar, globalContraintes, globalVars, &variablesModif, &nbModif);
             nbVarModif.push(nbModif);
 
@@ -95,7 +96,24 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                 process.push(globalVars[++k]);
                 //TODO: Regarder pourquoi ce break change le résultat
                 break;
-            } else {
+            } 
+            else if(emptyDomain(globalVars) && i == currentVar->getDomainSize() - 1){
+                std::cout << "Aucune valeur consistante trouvée pour la variable " << currentVar->getIdentifier() << std::endl;
+                process.pop();
+                int nbVarModifAtStep = nbVarModif.top();
+                nbVarModif.pop();
+                unsigned oldSize = variablesModif.size();
+                for(int i = oldSize - 1; i >= oldSize - nbVarModifAtStep; i--){
+                    variablesModif[i]->setDomainSize(
+                        variablesModif[i]->getDomainSize() +
+                        variablesModif[i]->getRemovedSizes()[variablesModif[i]->getRemovedSizes().size()]
+                    );
+                    variablesModif.pop_back();
+                }
+                --k;
+                currentVar->setValue(0);
+            }
+            else {
                 std::cout << "EMPTY DOMAIN" << std::endl;
                 int nbVarModifAtStep = nbVarModif.top();
                 std::cout << nbVarModifAtStep << std::endl;
@@ -108,12 +126,13 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                         variablesModif[i]->getRemovedSizes()[variablesModif[i]->getRemovedSizes().size() - 1]
                     );
                     variablesModif[i]->getRemovedSizes().pop_back();
+                    variablesModif[i]->setValue(0);
                     variablesModif.pop_back();
                 }
             }
         }
 
-        if(emptyDomain(globalVars)){
+        /*if(emptyDomain(globalVars)){
             std::cout << "Aucune valeur consistante trouvée pour la variable " << currentVar->getIdentifier() << std::endl;
             process.pop();
             int nbVarModifAtStep = nbVarModif.top();
@@ -128,7 +147,7 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
             }
             --k;
             currentVar->setValue(0);
-        }
+        }*/
     }
     return globalVars;
 }

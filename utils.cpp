@@ -58,22 +58,31 @@ bool emptyDomain(std::vector<Variable*> vars){
 }
 
 void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std::vector<Variable*> globalVariables, std::vector<Variable*> *variablesModifs, int *nbModif){
+    int begin = 0;
     for(int i = 0; i < globalVariables.size(); ++i){
-        if(v->getIdentifier() != globalVariables[i]->getIdentifier()){
+        if(v->getIdentifier() == globalVariables[i]->getIdentifier()){
+            begin = i + 1;
+        }
+    }
+
+    for(; begin < globalVariables.size(); ++begin){
+        //if(v->getIdentifier() != globalVariables[begin]->getIdentifier()){
+            printf ("Variable %d <=> Variable %d\n", v->getIdentifier(), globalVariables[begin]->getIdentifier());
             int removedSize = 0;
             for(int j = 0; j < globalContraintes.size(); ++j){
                 bool isInVars1 = globalContraintes[j]->isInVars(v);
-                bool isInVars2 = globalContraintes[j]->isInVars(globalVariables[i]);
+                bool isInVars2 = globalContraintes[j]->isInVars(globalVariables[begin]);
                 if(isInVars1 && isInVars2){
-                    globalContraintes[j]->remove(v, globalVariables[i], &removedSize);
+                    globalContraintes[j]->remove(v, globalVariables[begin], &removedSize);
                 }
             }
+            
 
             if(removedSize != 0){
-                globalVariables[i]->getRemovedSizes().push_back(removedSize);
-                variablesModifs->push_back(globalVariables[i]);
+                globalVariables[begin]->getRemovedSizes().push_back(removedSize);
+                variablesModifs->push_back(globalVariables[begin]);
                 ++*nbModif;
             }
-        }
+        //}
     }
 }
