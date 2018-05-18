@@ -119,7 +119,6 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                 //TODO: Regarder pourquoi ce break change le résultat
                 break;
             }
-
             else if(emptyDomain(globalVars) && i == currentVar->getDomainSize() - 1){
                 std::cout << "Aucune valeur consistante trouvée pour la variable " << currentVar->getIdentifier() << std::endl;
                 process.pop();
@@ -139,12 +138,19 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                 currentVar->setValue(0);
             }
             else {
+                for(int z = 0; z < variablesModif.size(); ++z){
+                    std::cout << variablesModif[z]->getIdentifier() << " -> ";
+                    for(int y = 0; y <  variablesModif[z]->getRemovedSizes().size(); ++y){
+                        std::cout << variablesModif[z]->getRemovedSizes()[y] << " ";
+                    }
+                    std::cout << std::endl;
+                }
                 std::cout << "EMPTY DOMAIN" << std::endl;
                 int nbVarModifAtStep = nbVarModif.top();
                 std::cout << nbVarModifAtStep << std::endl;
                 nbVarModif.pop();
                 unsigned oldSize = variablesModif.size();
-                std::cout << oldSize << std::endl;
+                //std::cout << oldSize << std::endl;
                 for(int j = (oldSize - 1); j >= (oldSize - nbVarModifAtStep); j--){
                     variablesModif[j]->setDomainSize(
                         variablesModif[j]->getDomainSize() +
@@ -153,6 +159,16 @@ std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::v
                     variablesModif[j]->getRemovedSizes().pop_back();
                     variablesModif[j]->setValue(0);
                     variablesModif.pop_back();
+
+                    for(int z = 0; z < variablesModif.size(); ++z){
+                    std::cout << variablesModif[z]->getIdentifier() << " -> ";
+                    for(int y = 0; y <  variablesModif[z]->getRemovedSizes().size(); ++y){
+                        std::cout << variablesModif[z]->getRemovedSizes()[y] << " ";
+                    }
+                    std::cout << std::endl;
+                    }
+
+                    std::cout << globalVars[8]->getDomain()[globalVars[8]->getDomainSize() - 1] << std::endl;
                 }
             }
         }
