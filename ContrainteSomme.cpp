@@ -50,7 +50,6 @@ void ContrainteSomme::remove(Variable *currentVar, Variable *v2, int *removedSiz
 	}
 
 	else{
-		std::cout << v2->getDomainSize() << std::endl;
 		for(int i = 0; i < v2->getDomainSize(); ++i){
 			std::cout << v2->getDomain()[i] << "+" << currentResult << "=" << v2->getDomain()[i] + currentResult << std::endl;
 			if(v2->getDomain()[i] + currentResult > this->getResultat()){
