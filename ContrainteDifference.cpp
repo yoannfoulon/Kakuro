@@ -13,6 +13,8 @@ std::string ContrainteDifference::getType(){
 }
 
 void ContrainteDifference::remove(Variable *currentVar, Variable *v2, int *removedSize){
+	int oldDomainSize = v2->getDomainSize();
 	v2->removeFromDomain(currentVar->getValue());
-	++*removedSize;
+	if(v2->getDomainSize() != oldDomainSize)
+		++*removedSize;
 }
