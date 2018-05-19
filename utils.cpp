@@ -27,7 +27,7 @@ void displayCSP(std::vector<Variable*> globalVars, std::vector<Contrainte*> glob
     }
 }
 
-bool isConsistant(std::vector<Contrainte*> globalContraintes, int *nbTests){
+bool isConsistant(std::vector<Contrainte*> globalContraintes, long *nbTests){
     for(int i = 0; i < globalContraintes.size(); ++i){
         ++*nbTests;
         bool verifiable = true;
@@ -58,7 +58,7 @@ bool emptyDomain(std::vector<Variable*> vars){
     return false;
 }
 
-void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std::vector<Variable*> globalVariables, std::vector<Variable*> *variablesModifs, int *nbModif){
+void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std::vector<Variable*> globalVariables, std::vector<Variable*> *variablesModifs, int *nbModif, long *nbTests){
     int begin = 0;
     for(int i = 0; i < globalVariables.size(); ++i){
         if(v->getIdentifier() == globalVariables[i]->getIdentifier()){
@@ -75,6 +75,7 @@ void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std
                 bool isInVars2 = globalContraintes[j]->isInVars(globalVariables[begin]);
                 if(isInVars1 && isInVars2){
                     globalContraintes[j]->remove(v, globalVariables[begin], &removedSize);
+                    ++*nbTests;
                 }
             }
 

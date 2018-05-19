@@ -6,5 +6,5 @@
 #include "utils.hpp"
 
 
-std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes, int *nbNoeuds, int *nbTests);
-std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes, int *nbTests);
+std::vector<Variable*> backTrack(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes, long *nbNoeuds, long *nbTests);
+std::vector<Variable*> forwardChecking(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes, long *nbNoeuds, long *nbTests);
