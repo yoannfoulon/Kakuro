@@ -23,10 +23,10 @@ int ContrainteSomme::getResultat(){
 }
 
 void ContrainteSomme::remove(Variable *currentVar, Variable *v2, int *removedSize){
-	
+
 	int currentResult = 0;
-	int nbValued = 0;
-	for(int i = 0; i < this->m_variables.size(); ++i){
+	unsigned nbValued = 0;
+	for(unsigned i = 0; i < this->m_variables.size(); ++i){
 		if(this->m_variables[i]->getValue() != 0){
 			++nbValued;
 			currentResult += this->m_variables[i]->getValue();
@@ -37,7 +37,7 @@ void ContrainteSomme::remove(Variable *currentVar, Variable *v2, int *removedSiz
 	//std::cout << "nbValued: " << nbValued << std::endl;
 	//std::cout << "currentResult: " << currentResult << std::endl;
 	//std::cout << "Resultat attendu: " << this->getResultat() << std::endl;
-	
+
 	if(nbValued == this->m_variables.size() - 1){
 		int result = this->getResultat() - currentResult;
 		for(int i = 0; i < v2->getDomainSize(); ++i){
@@ -51,7 +51,6 @@ void ContrainteSomme::remove(Variable *currentVar, Variable *v2, int *removedSiz
 
 	else{
 		for(int i = 0; i < v2->getDomainSize(); ++i){
-			std::cout << v2->getDomain()[i] << "+" << currentResult << "=" << v2->getDomain()[i] + currentResult << std::endl;
 			if(v2->getDomain()[i] + currentResult > this->getResultat()){
 				v2->removeFromDomain(v2->getDomain()[i]);
 				--i;

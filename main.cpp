@@ -5,12 +5,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
+#include <functional>
 #include <ctime>
+
 
 
 int main (int argc, char *argv[]) {
 
-    bool BT, FC, FCH;
+    bool BT = false;
+    bool FC = false;
+    bool FCH = false;
 
     if (argc < 2) {
         fprintf (stderr,"Utilisation: %s [-bt] [-fc] [-fch] <fichier>\n", argv[0]);
@@ -37,7 +41,7 @@ int main (int argc, char *argv[]) {
     std::vector<Variable*> solutions;
 
     parse(argv[argc-1], globalVars, globalContraintes, domain);
-    displayCSP(globalVars, globalContraintes);
+    //displayCSP(globalVars, globalContraintes);
 
     if(BT){
         std::cout << "--------- BACKTRACK ---------" << std::endl;
@@ -49,24 +53,54 @@ int main (int argc, char *argv[]) {
         std::cout << nbNoeuds << " noeuds" << std::endl;
         std::cout << nbTests << " tests de contrainte" << std::endl;
 
+        /*
         for(unsigned i = 0; i < solutions.size(); ++i){
-            std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
+          std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
         }
+        */
+
+        if(FC || FCH) reset(globalVars, &nbNoeuds, &nbTests, domain);
     }
 
     if(FC){
         std::cout << "--------- FORWARD CHECKING ---------" << std::endl;
         start = std::clock();
-        solutions = forwardChecking(globalVars, globalContraintes, &nbNoeuds, &nbTests);
+        solutions = forwardChecking(globalVars, globalContraintes, &nbNoeuds, &nbTests, false);
         duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
         std::cout << "Réalisé en " << duration << " secondes" << std::endl;
         std::cout << nbNoeuds << " noeuds" << std::endl;
         std::cout << nbTests << " tests de contrainte" << std::endl;
-        
+        /*
         for(unsigned i = 0; i < solutions.size(); ++i){
           std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
         }
+        */
+        if(FCH) reset(globalVars, &nbNoeuds, &nbTests, domain);
+    }
+
+    if(FCH){
+        std::cout << "--------- FORWARD CHECKING HEURISTIQUE ---------" << std::endl;
+
+
+        /*
+        for(int i = 0; i < globalVars.size(); ++i){
+            std::cout << globalVars[i]->getIdentifier() << std::endl;
+        }
+        */
+        start = std::clock();
+        solutions = forwardChecking(globalVars, globalContraintes, &nbNoeuds, &nbTests, true);
+        duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
+        std::cout << "Réalisé en " << duration << " secondes" << std::endl;
+        std::cout << nbNoeuds << " noeuds" << std::endl;
+        std::cout << nbTests << " tests de contrainte" << std::endl;
+
+        /*
+        for(unsigned i = 0; i < solutions.size(); ++i){
+          std::cout << "Variable " << solutions[i]->getIdentifier() << " --> " << solutions[i]->getValue() << std::endl;
+        }
+        */
     }
     return 0;
 }

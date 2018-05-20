@@ -12,15 +12,15 @@ struct {
 void displayCSP(std::vector<Variable*> globalVars, std::vector<Contrainte*> globalContraintes){
     std::cout << "----------------- VARIABLES -------------------" << std::endl;
 
-    for(int i = 0; i < globalVars.size(); ++i){
+    for(unsigned i = 0; i < globalVars.size(); ++i){
        std::cout << "Variable " << globalVars[i]->getIdentifier() << " -> " << globalVars[i]->getValue() << std::endl;
     }
 
     std::cout << "----------------- CONTRAINTES -------------------" << std::endl;
 
-    for(int i = 0; i < globalContraintes.size(); ++i){
+    for(unsigned i = 0; i < globalContraintes.size(); ++i){
         std::cout << i << ") " << globalContraintes[i]->getType() << std::endl;
-        for(int j = 0; j < globalContraintes[i]->getVariables().size(); ++j){
+        for(unsigned j = 0; j < globalContraintes[i]->getVariables().size(); ++j){
            std::cout << "Variable " << globalContraintes[i]->getVariables()[j]->getIdentifier() << " -> " << globalContraintes[i]->getVariables()[j]->getValue() << std::endl;
         }
        std::cout << "Arité " << globalContraintes[i]->getArite() << std::endl << std::endl;
@@ -28,7 +28,7 @@ void displayCSP(std::vector<Variable*> globalVars, std::vector<Contrainte*> glob
 }
 
 bool isConsistant(std::vector<Contrainte*> globalContraintes, long *nbTests){
-    for(int i = 0; i < globalContraintes.size(); ++i){
+    for(unsigned i = 0; i < globalContraintes.size(); ++i){
         ++*nbTests;
         bool verifiable = true;
         for (int j = 0; j < globalContraintes[i]->getArite() && verifiable; ++j) {
@@ -45,22 +45,22 @@ bool isConsistant(std::vector<Contrainte*> globalContraintes, long *nbTests){
 }
 
 bool isCompleted(std::vector<Variable*> solutions){
-    for(int i = 0; i < solutions.size(); ++i){
+    for(unsigned i = 0; i < solutions.size(); ++i){
         if(solutions[i]->getValue() == 0) return false;
     }
     return true;
 }
 
 bool emptyDomain(std::vector<Variable*> vars){
-    for(int i = 0; i < vars.size(); ++i){
+    for(unsigned i = 0; i < vars.size(); ++i){
         if(vars[i]->getDomainSize() == 0) return true;
     }
     return false;
 }
 
 void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std::vector<Variable*> globalVariables, std::vector<Variable*> *variablesModifs, int *nbModif, long *nbTests){
-    int begin = 0;
-    for(int i = 0; i < globalVariables.size(); ++i){
+    unsigned begin = 0;
+    for(unsigned i = 0; i < globalVariables.size(); ++i){
         if(v->getIdentifier() == globalVariables[i]->getIdentifier()){
             begin = i + 1;
         }
@@ -68,9 +68,8 @@ void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std
 
     for(; begin < globalVariables.size(); ++begin){
         //if(v->getIdentifier() != globalVariables[begin]->getIdentifier()){
-            printf ("Variable %d <=> Variable %d\n", v->getIdentifier(), globalVariables[begin]->getIdentifier());
             int removedSize = 0;
-            for(int j = 0; j < globalContraintes.size(); ++j){
+            for(unsigned j = 0; j < globalContraintes.size(); ++j){
                 bool isInVars1 = globalContraintes[j]->isInVars(v);
                 bool isInVars2 = globalContraintes[j]->isInVars(globalVariables[begin]);
                 if(isInVars1 && isInVars2){
@@ -87,4 +86,35 @@ void checkAndRemove(Variable* v, std::vector<Contrainte*> globalContraintes, std
             }
         //}
     }
+}
+
+void reset(std::vector<Variable*> globalVars, long *nbNoeuds, long *nbTests, std::vector<int> domain){
+    for(unsigned i = 0; i < globalVars.size(); ++i){
+        globalVars[i]->setValue(0);
+        globalVars[i]->setDomain(domain);
+        globalVars[i]->setDomainSize(domain.size());
+    }
+    *nbNoeuds = 0;
+    *nbTests = 0;
+}
+
+bool domOnDegHeuristic(Variable* v1, Variable* v2, std::vector<Contrainte*> globalContraintes){
+
+    double degV1 = 0;
+    double degV2 = 0;
+
+    for(unsigned i = 0; i < globalContraintes.size(); ++i){
+        for(unsigned j = 0; j < globalContraintes[i]->getVariables().size(); ++j){
+            if(v1->getIdentifier() == globalContraintes[i]->getVariables()[j]->getIdentifier()) ++degV1;
+            if(v2->getIdentifier() == globalContraintes[i]->getVariables()[j]->getIdentifier()) ++degV2;
+        }
+    }
+
+    double heuristicV1 = (double)v1->getDomainSize() / degV1;
+    double heuristicV2 = (double)v2->getDomainSize() / degV2;
+
+    std::cout << v1->getIdentifier() << " --> " << v1->getDomainSize() << " / " << degV1 << " = " << heuristicV1 << " (" << v1->getValue() << ")" << std::endl;
+    std::cout << v2->getIdentifier() << " --> " << v2->getDomainSize() << " / " << degV1 << " = " << heuristicV2 << " (" << v2->getValue() << ")" << std::endl;
+
+    return heuristicV1 < heuristicV2;
 }

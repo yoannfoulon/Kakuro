@@ -32,7 +32,7 @@ void Variable::setRemovedSizes(std::vector<int> removedSizes){
 }
 
 void Variable::removeFromDomain(int value){
-	for(unsigned i = 0; i < this->getDomainSize(); ++i){
+	for(int i = 0; i < this->getDomainSize(); ++i){
 		if(this->getDomain()[i] == value){
 			std::swap(this->getDomain()[i], this->getDomain()[this->getDomainSize()-1]);
 			this->setDomainSize(this->getDomainSize() - 1);
